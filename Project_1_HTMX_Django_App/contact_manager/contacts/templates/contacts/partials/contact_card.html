@@ -1,0 +1,52 @@
+{# This is a partial template that represents a single contact card #}
+<div class="col-md-4 mb-4" id="contact-{{ contact.pk }}">
+    <div class="card h-100">
+        <div class="card-body">
+            <h5 class="card-title">{{ contact.name }}</h5>
+            <p class="card-text">
+                <strong>Email:</strong> {{ contact.email }}<br>
+                <strong>Phone:</strong> {{ contact.phone }}
+            </p>
+            {% if contact.address %}
+                <p class="card-text"><strong>Address:</strong> {{ contact.address }}</p>
+            {% endif %}
+            {% if contact.notes %}
+                <p class="card-text"><strong>Notes:</strong> {{ contact.notes }}</p>
+            {% endif %}
+            <div class="btn-group">
+                {# Edit button: Uses HTMX to load the edit form #}
+                <button type="button"
+                   class="btn btn-sm btn-outline-primary"
+                   hx-get="{% url 'contact_edit' contact.pk %}"
+                   hx-target="main"
+                   hx-push-url="true"
+                   hx-indicator="#edit-indicator-{{ contact.pk }}">
+                    <span class="htmx-indicator">Loading...</span>
+                    <span>Edit</span>
+                </button>
+                {# Delete button: Uses HTMX to load the delete confirmation dialog #}
+                <button type="button"
+                   class="btn btn-sm btn-outline-danger"
+                   hx-get="{% url 'contact_delete' contact.pk %}"
+                   hx-target="main"
+                   hx-swap="innerHTML"
+                   hx-push-url="true"
+                   hx-indicator="#delete-indicator-{{ contact.pk }}">
+                    <span class="htmx-indicator">Loading...</span>
+                    <span>Delete</span>
+                </button>
+            </div>
+            {# Loading indicators #}
+            <div id="edit-indicator-{{ contact.pk }}" class="htmx-indicator">
+                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <div id="delete-indicator-{{ contact.pk }}" class="htmx-indicator">
+                <div class="spinner-border spinner-border-sm text-danger" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

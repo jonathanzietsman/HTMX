@@ -1,0 +1,40 @@
+{% extends 'contacts/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Contacts</h2>
+            <a href="{% url 'contact_create' %}" 
+               class="btn btn-primary"
+               hx-get="{% url 'contact_create' %}"
+               hx-target="body"
+               hx-push-url="true"
+               hx-indicator="#add-indicator">
+                <span class="htmx-indicator">Loading...</span>
+                <span>Add Contact</span>
+            </a>
+        </div>
+
+        <div class="row" id="contact-list" hx-trigger="contactListChanged from:body">
+            {% for contact in contacts %}
+                {% include 'contacts/partials/contact_card.html' %}
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        No contacts found. Add your first contact!
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{# Loading indicator for add contact button #}
+<div id="add-indicator" class="htmx-indicator">
+    <div class="spinner-border spinner-border-sm text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+{% endblock %} 

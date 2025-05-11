@@ -1,0 +1,36 @@
+{% extends 'contacts/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Delete Contact</h2>
+                <p>Are you sure you want to delete "{{ contact.name }}"?</p>
+                {# Delete form: Uses HTMX to submit the delete request and redirect to contact list #}
+                <form method="post" 
+                      hx-post="{% url 'contact_delete' contact.pk %}"
+                      hx-target="body"
+                      hx-push-url="true"
+                      hx-indicator="#delete-confirm-indicator"
+                      hx-on::after-request="if(event.detail.successful) { 
+                          window.location.href = '{% url 'contact_list' %}';
+                      }">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <span class="htmx-indicator">Deleting...</span>
+                        <span>Delete</span>
+                    </button>
+                    <a href="{% url 'contact_list' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+                {# Loading indicator #}
+                <div id="delete-confirm-indicator" class="htmx-indicator mt-3">
+                    <div class="spinner-border spinner-border-sm text-danger" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
